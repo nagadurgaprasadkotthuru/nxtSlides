@@ -5,7 +5,11 @@ const Slide = props => {
   const activeTab = activeSlide === slideDetails.id ? 'active-tab' : ''
   const clickSlide = () => onClickSlide(slideDetails.id)
   return (
-    <li className={`slide-element ${activeTab}`} onClick={clickSlide}>
+    <li
+      data-testid={`slideTab${slidesCount}`}
+      className={`slide-element ${activeTab}`}
+      onClick={clickSlide}
+    >
       <p className="slides-count">{slidesCount}</p>
       <div className="slide">
         <h1 className="slide-heading">{slideDetails.heading}</h1>

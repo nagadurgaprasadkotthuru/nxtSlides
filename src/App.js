@@ -1,4 +1,9 @@
-import SlidesShow from './components/SlidesShow'
+import {Component} from 'react'
+
+import {v4} from 'uuid'
+
+import Header from './components/Header'
+import Slide from './components/Slide'
 
 import './App.css'
 
@@ -42,6 +47,151 @@ const initialSlidesList = [
 ]
 
 // Replace your code here
-const App = () => <SlidesShow initialSlidesList={initialSlidesList} />
+class App extends Component {
+  state = {
+    activeSlide: initialSlidesList[0].id,
+    activeSlideDetails: [initialSlidesList[0]],
+    slidesList: initialSlidesList,
+    headingInput: initialSlidesList[0].heading,
+    descriptionInput: initialSlidesList[0].description,
+    isShowHeadingInput: false,
+    isShowDescriptionInput: false,
+  }
+
+  onClickSlide = id => {
+    this.setState(
+      prevState => ({
+        activeSlide: id,
+        activeSlideDetails: prevState.slidesList.filter(
+          eachItem => eachItem.id === id,
+        ),
+      }),
+      this.changeHeadingOrDescription(),
+    )
+  }
+
+  changeHeadingOrDescription = () =>
+    this.setState(prevState => ({
+      headingInput: prevState.activeSlideDetails[0].heading,
+      descriptionInput: prevState.activeSlideDetails[0].description,
+    }))
+
+  onIsShowHeadingInputChanged = () =>
+    this.setState(prevState => ({
+      isShowHeadingInput: !prevState.isShowHeadingInput,
+      activeSlide: {...prevState.activeSlide, heading: prevState.headingInput},
+    }))
+
+  onIsShowDescriptionInputChanged = () =>
+    this.setState(prevState => ({
+      isShowDescriptionInput: !prevState.isShowDescriptionInput,
+    }))
+
+  onChangeHeadingInput = event =>
+    this.setState({headingInput: event.target.value})
+
+  onChangeDescriptionInput = event =>
+    this.setState({descriptionInput: event.target.value})
+
+  addNewSlide = () => {
+    const newSlide = {
+      id: v4(),
+      heading: 'Heading',
+      description: 'Description',
+    }
+    this.setState(prevState => ({
+      slidesList: [...prevState.slidesList, newSlide],
+    }))
+  }
+
+  renderActiveSlide = () => {
+    const {
+      activeSlideDetails,
+      isShowHeadingInput,
+      isShowDescriptionInput,
+      headingInput,
+      descriptionInput,
+    } = this.state
+    const activeSlide = activeSlideDetails[0]
+    return (
+      <div className="active-slide-container">
+        {isShowHeadingInput ? (
+          <input
+            type="text"
+            value={headingInput}
+            onBlur={this.onIsShowHeadingInputChanged}
+            onChange={this.onChangeHeadingInput}
+          />
+        ) : (
+          <h1 className="heading" onClick={this.onIsShowHeadingInputChanged}>
+            {activeSlide.heading}
+          </h1>
+        )}
+        {isShowDescriptionInput ? (
+          <input
+            type="text"
+            value={descriptionInput}
+            onBlur={this.onIsShowDescriptionInputChanged}
+            onChange={this.onChangeDescriptionInput}
+          />
+        ) : (
+          <p
+            className="description"
+            onClick={this.onIsShowDescriptionInputChanged}
+          >
+            {activeSlide.description}
+          </p>
+        )}
+      </div>
+    )
+  }
+
+  renderSlidesBar = () => {
+    const {slidesList, activeSlide} = this.state
+    let count = 0
+    return (
+      <ul className="slides-container">
+        {slidesList.map(eachItem => {
+          count += 1
+          return (
+            <Slide
+              slideDetails={eachItem}
+              key={eachItem.id}
+              slidesCount={count}
+              activeSlide={activeSlide}
+              onClickSlide={this.onClickSlide}
+            />
+          )
+        })}
+      </ul>
+    )
+  }
+
+  render() {
+    return (
+      <div className="bg-container">
+        <Header />
+        <div className="content-container">
+          <div className="button-slides-bar-container">
+            <button
+              className="new-button"
+              type="button"
+              onClick={this.addNewSlide}
+            >
+              <img
+                className="plus-image"
+                alt="new plus icon"
+                src="https://assets.ccbp.in/frontend/react-js/nxt-slides/nxt-slides-plus-icon.png"
+              />
+              <p className="new">New</p>
+            </button>
+            {this.renderSlidesBar()}
+          </div>
+          {this.renderActiveSlide()}
+        </div>
+      </div>
+    )
+  }
+}
 
 export default App

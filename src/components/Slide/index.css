@@ -4,6 +4,8 @@
   align-items: flex-start;
   margin: 8px 10px 8px 0px;
   padding: 10px 8px 10px 15px;
+  cursor: pointer;
+  outline: none;
 }
 
 .active-tab {
