@@ -69,3 +69,42 @@ body {
   box-shadow: 0px 4px 16px 0px #bfbfbf;
   border: 2px solid black;
 }
+
+.heading {
+  font-size: 38px;
+  font-family: 'Bree Serif';
+  color: #0967d2;
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 24px;
+  font-family: 'Bree Serif';
+  margin-top: 4px;
+}
+
+.heading-input {
+  border: 0px;
+  font-size: 38px;
+  font-family: 'Bree Serif';
+  color: #0967d2;
+  text-align: center;
+  background-color: #f8fafc;
+  outline: none;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.description-input {
+  border: 0px;
+  font-size: 24px;
+  font-family: 'Bree Serif';
+  text-align: center;
+  background-color: #f8fafc;
+  outline: none;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-top: 4px;
+}

@@ -50,36 +50,18 @@ const initialSlidesList = [
 class App extends Component {
   state = {
     activeSlide: initialSlidesList[0].id,
-    activeSlideDetails: [initialSlidesList[0]],
     slidesList: initialSlidesList,
-    headingInput: initialSlidesList[0].heading,
-    descriptionInput: initialSlidesList[0].description,
     isShowHeadingInput: false,
     isShowDescriptionInput: false,
   }
 
   onClickSlide = id => {
-    this.setState(
-      prevState => ({
-        activeSlide: id,
-        activeSlideDetails: prevState.slidesList.filter(
-          eachItem => eachItem.id === id,
-        ),
-      }),
-      this.changeHeadingOrDescription(),
-    )
+    this.setState({activeSlide: id})
   }
-
-  changeHeadingOrDescription = () =>
-    this.setState(prevState => ({
-      headingInput: prevState.activeSlideDetails[0].heading,
-      descriptionInput: prevState.activeSlideDetails[0].description,
-    }))
 
   onIsShowHeadingInputChanged = () =>
     this.setState(prevState => ({
       isShowHeadingInput: !prevState.isShowHeadingInput,
-      activeSlide: {...prevState.activeSlide, heading: prevState.headingInput},
     }))
 
   onIsShowDescriptionInputChanged = () =>
@@ -87,11 +69,29 @@ class App extends Component {
       isShowDescriptionInput: !prevState.isShowDescriptionInput,
     }))
 
-  onChangeHeadingInput = event =>
-    this.setState({headingInput: event.target.value})
+  onChangeHeadingInput = event => {
+    const {activeSlide} = this.state
+    this.setState(prevState => ({
+      slidesList: prevState.slidesList.map(eachItem => {
+        if (eachItem.id === activeSlide) {
+          return {...eachItem, heading: event.target.value}
+        }
+        return eachItem
+      }),
+    }))
+  }
 
-  onChangeDescriptionInput = event =>
-    this.setState({descriptionInput: event.target.value})
+  onChangeDescriptionInput = event => {
+    const {activeSlide} = this.state
+    this.setState(prevState => ({
+      slidesList: prevState.slidesList.map(eachItem => {
+        if (eachItem.id === activeSlide) {
+          return {...eachItem, description: event.target.value}
+        }
+        return eachItem
+      }),
+    }))
+  }
 
   addNewSlide = () => {
     const newSlide = {
@@ -106,31 +106,35 @@ class App extends Component {
 
   renderActiveSlide = () => {
     const {
-      activeSlideDetails,
+      activeSlide,
+      slidesList,
       isShowHeadingInput,
       isShowDescriptionInput,
-      headingInput,
-      descriptionInput,
     } = this.state
-    const activeSlide = activeSlideDetails[0]
+    const activeSlideDetails = slidesList.filter(
+      eachSlide => eachSlide.id === activeSlide,
+    )
+    const activeSlideShowDetails = activeSlideDetails[0]
     return (
       <div className="active-slide-container">
         {isShowHeadingInput ? (
           <input
+            className="heading-input"
             type="text"
-            value={headingInput}
+            value={activeSlideShowDetails.heading}
             onBlur={this.onIsShowHeadingInputChanged}
             onChange={this.onChangeHeadingInput}
           />
         ) : (
           <h1 className="heading" onClick={this.onIsShowHeadingInputChanged}>
-            {activeSlide.heading}
+            {activeSlideShowDetails.heading}
           </h1>
         )}
         {isShowDescriptionInput ? (
           <input
+            className="description-input"
             type="text"
-            value={descriptionInput}
+            value={activeSlideShowDetails.description}
             onBlur={this.onIsShowDescriptionInputChanged}
             onChange={this.onChangeDescriptionInput}
           />
@@ -139,7 +143,7 @@ class App extends Component {
             className="description"
             onClick={this.onIsShowDescriptionInputChanged}
           >
-            {activeSlide.description}
+            {activeSlideShowDetails.description}
           </p>
         )}
       </div>
