@@ -50,7 +50,6 @@ body {
 }
 
 .slides-container {
-  padding-left: 0px;
   margin-left: 0px;
   max-height: 75vh;
   overflow-y: auto;

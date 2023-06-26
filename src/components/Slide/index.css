@@ -1,11 +1,8 @@
 .slide-element {
-  list-style-type: none;
-  display: flex;
-  align-items: flex-start;
-  margin: 8px 10px 8px 0px;
   padding: 10px 8px 10px 15px;
   cursor: pointer;
   outline: none;
+  list-style-type: decimal;
 }
 
 .active-tab {

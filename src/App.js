@@ -99,9 +99,17 @@ class App extends Component {
       heading: 'Heading',
       description: 'Description',
     }
-    this.setState(prevState => ({
-      slidesList: [...prevState.slidesList, newSlide],
-    }))
+    const {activeSlide, slidesList} = this.state
+    let index = slidesList.findIndex(eachSlide => {
+      if (eachSlide.id === activeSlide) {
+        return true
+      }
+      return false
+    })
+    index += 1
+    slidesList.splice(index, 0, newSlide)
+    console.log(index)
+    this.setState({slidesList, activeSlide: newSlide.id})
   }
 
   renderActiveSlide = () => {
@@ -154,7 +162,7 @@ class App extends Component {
     const {slidesList, activeSlide} = this.state
     let count = 0
     return (
-      <ul className="slides-container">
+      <ol className="slides-container">
         {slidesList.map(eachItem => {
           count += 1
           return (
@@ -167,7 +175,7 @@ class App extends Component {
             />
           )
         })}
-      </ul>
+      </ol>
     )
   }
 
